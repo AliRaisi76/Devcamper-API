@@ -3,6 +3,9 @@ const dotenv = require('dotenv')
 const morgan = require('morgan')
 const colors = require('colors')
 
+// Load error handler middlewares
+const errorHandler = require('./middlewares/error')
+
 // Load DB connection file
 const connectDB = require('./config/db')
 
@@ -24,6 +27,9 @@ if (process.env.NODE_ENV === 'development') app.use(morgan('dev'))
 
 // Mount Routes
 app.use('/api/v1/bootcamps', bootcamps)
+
+// Use errorHandler as middelware
+app.use(errorHandler)
 
 const PORT = process.env.PORT || 5000
 
