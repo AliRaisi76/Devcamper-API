@@ -45,7 +45,7 @@ const BootcampSchema = new mongoose.Schema({
       enum: ['Point'],
     },
     coordinates: {
-      type: Object,
+      type: [Number],
       index: '2dsphere',
     },
     formattedAddress: String,
@@ -112,7 +112,7 @@ BootcampSchema.pre('save', async function (next) {
     const place = data.results[0]
     this.location = {
       type: 'Point',
-      coordinates: place.geometry,
+      coordinates: Object.values(place.geometry).reverse(),
       formattedAddress: place.formatted,
       street: place.components.road,
       city: place.components.town,
