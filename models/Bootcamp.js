@@ -1,5 +1,6 @@
 const mongoose = require('mongoose')
 const slugify = require('slugify')
+const opencage = require('opencage-api-client')
 
 const BootcampSchema = new mongoose.Schema({
   name: {
@@ -44,7 +45,7 @@ const BootcampSchema = new mongoose.Schema({
       enum: ['Point'],
     },
     coordinates: {
-      type: [Number],
+      type: Object,
       index: '2dsphere',
     },
     formattedAddress: String,
@@ -102,6 +103,26 @@ const BootcampSchema = new mongoose.Schema({
 // SLugify from the name
 BootcampSchema.pre('save', function (next) {
   this.slug = slugify(this.name, { lower: true })
+  next()
+})
+
+BootcampSchema.pre('save', async function (next) {
+  const data = await opencage.geocode({ q: this.address })
+  if (data.status.code === 200 && data.results.length > 0) {
+    const place = data.results[0]
+    this.location = {
+      type: 'Point',
+      coordinates: place.geometry,
+      formattedAddress: place.formatted,
+      street: place.components.road,
+      city: place.components.town,
+      state: place.components.state,
+      zipcode: place.components.postcode,
+      country: place.components.country,
+    }
+  }
+  // Dont save this in DB
+  this.address = undefined
   next()
 })
 

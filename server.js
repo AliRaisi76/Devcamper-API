@@ -41,6 +41,7 @@ const server = app.listen(
   )
 )
 
+// Handle Unhandled Rejections and close the server and exit the process
 process.on('unhandledRejection', (reason, promise) => {
   console.log(
     `Unhandled Rejection. Reason: ${reason.message}, Promise: ${promise}`.red
