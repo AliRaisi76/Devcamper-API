@@ -11,6 +11,7 @@ const connectDB = require('./config/db')
 
 // Load route files
 const bootcamps = require('./routes/bootcamps')
+const courses = require('./routes/courses')
 
 // Load config vars
 dotenv.config({ path: './config/config.env' })
@@ -27,6 +28,7 @@ if (process.env.NODE_ENV === 'development') app.use(morgan('dev'))
 
 // Mount Routes
 app.use('/api/v1/bootcamps', bootcamps)
+app.use('/api/v1/courses', courses)
 
 // Use errorHandler as middelware
 app.use(errorHandler)
