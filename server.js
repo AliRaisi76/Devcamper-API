@@ -8,6 +8,9 @@ const colors = require('colors')
 // Load error handler middlewares
 const errorHandler = require('./middlewares/error')
 
+// Load config vars
+dotenv.config({ path: './config/config.env' })
+
 // Load DB connection file
 const connectDB = require('./config/db')
 
@@ -15,9 +18,6 @@ const connectDB = require('./config/db')
 const bootcamps = require('./routes/bootcamps')
 const courses = require('./routes/courses')
 const auth = require('./routes/auth')
-
-// Load config vars
-dotenv.config({ path: './config/config.env' })
 
 connectDB()
 
