@@ -66,3 +66,54 @@ exports.createReview = asyncHandler(async (req, res, next) => {
     data: review,
   })
 })
+
+// @Desc Update review
+// @Route PUT /api/v1/reviews/:id
+// @Access Private
+exports.updateReview = asyncHandler(async (req, res, next) => {
+  let review = await Review.findById(req.params.id)
+
+  if (!review) {
+    return next(
+      new ErrorResponse(`No review found with the id ${req.params.id}`, 404)
+    )
+  }
+
+  if (review.user.toString() !== req.user.id && req.user.role !== 'admin') {
+    return next(new ErrorResponse('Not authorized to use this route', 401))
+  }
+
+  review = await Review.findByIdAndUpdate(req.params.id, req.body, {
+    new: true,
+    runValidators: true,
+  })
+
+  res.status(200).json({
+    success: true,
+    data: review,
+  })
+})
+
+// @Desc Delete review
+// @Route DELETE /api/v1/reviews/:id
+// @Access Private
+exports.deleteReview = asyncHandler(async (req, res, next) => {
+  let review = await Review.findById(req.params.id)
+  console.log(review)
+  if (!review) {
+    return next(
+      new ErrorResponse(`No review found with the id ${req.params.id}`, 404)
+    )
+  }
+
+  if (review.user.toString() !== req.user.id && req.user.role !== 'admin') {
+    return next(new ErrorResponse('Not authorized to use this route', 401))
+  }
+
+  await Review.findByIdAndDelete(req.params.id)
+
+  res.status(200).json({
+    success: true,
+    data: {},
+  })
+})
