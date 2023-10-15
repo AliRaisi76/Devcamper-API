@@ -7,6 +7,7 @@ const cookieParser = require('cookie-parser')
 const mongoSanitize = require('express-mongo-sanitize')
 const helmet = require('helmet')
 const xss = require('xss-clean')
+const cors = require('cors')
 const colors = require('colors')
 
 // Load error handler middlewares
@@ -50,6 +51,8 @@ app.use(helmet())
 // Prevent XSS attacks
 app.use(xss())
 
+// Enable CORS
+app.use(cors())
 // Set static folder
 app.use(express.static(path.join(__dirname, 'public')))
 
